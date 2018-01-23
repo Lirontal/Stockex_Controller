@@ -11,7 +11,4 @@ function Entry(Symbol, Open, High, Low, Close, Adj_Close, Volume)
     this.Volume = Volume;
 }
 
-
-
-
 module.exports = Entry;

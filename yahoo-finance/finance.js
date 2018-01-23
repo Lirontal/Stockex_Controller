@@ -1,7 +1,6 @@
 // var util = require('util');
 function Finance()//'AAPL','2018-01-01'
 {
-
 }
 
 Finance.prototype.GetEntriesFor = function(Symbol, FromDate , ToDate)
@@ -17,15 +16,8 @@ Finance.prototype.GetEntriesFor = function(Symbol, FromDate , ToDate)
         if (err) {
             throw err;
         }
-        // console.log(util.format(
-        //     '=== %s (%d) ===',
-        //     SYMBOL,
-        //     quotes.length
-        // ).toString());
+
         return quotes;
-        quotes.forEach(function (quote) {
-            console.log(JSON.stringify(quote, null, 2));
-        })
     });
 };
 
