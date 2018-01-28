@@ -1,5 +1,4 @@
-var escape = require('js-string-escape');
-
+/* Class for stock entry */
 function Entry(Symbol, Open, High, Low, Close, Adj_Close, Volume)
 {
     this.Symbol = Symbol;
@@ -11,4 +10,4 @@ function Entry(Symbol, Open, High, Low, Close, Adj_Close, Volume)
     this.Volume = Volume;
 }
 
-module.exports = Entry;
+module.exports.Entry = Entry;

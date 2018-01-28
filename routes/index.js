@@ -1,48 +1,52 @@
 var express = require('express');
-var Entry = require('../entry/entry');
-var finance_interface = new require('../yahoo-finance/finance');
+
+var Finance = require('../yahoo-finance/finance');
+var Model = require('../model_interface/model');
+var finance = new Finance();
 var router = express.Router();
+var model = new Model();
+/* This executes on every route */
+router.use(function timeLog (req, res, next) {
+    makeResponseValid(res);
+    next();
+});
 
-var zerorpc = require("zerorpc");
-
-/* get JSON with entries for each day  */
-router.get('/featured', function(req, res, next)
+/* Alter response's header so that angular accepts our response */
+function makeResponseValid(res)
 {
-    var fromDate = req.params.FromDate;
-    var toDate = req.params.ToDate;
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    var applEnt = new Entry(Symbol = 'APPL', Open = '176.18',  High = '177.36', Low = '175.65', Close = '177.22', Adj_Close = '177.09',Volume = '25,226,000');
-    var googEnt = new Entry(Symbol = 'GOOG', Open = '1,102.41',  High = '1,124.29', Low = '1,101.15', Close = '1,122.26', Adj_Close = '1,122.26', Volume = '2,000,000');
+}
 
-    console.log(applEnt.high);
-    var jsonObject = {};
-    jsonObject['values'] = [];
-    var entryArray = [ applEnt, googEnt];
-    entryArray.forEach(function(item)
-    {
-        jsonObject['values'].push(item);
-    });
-    res.send(jsonObject);
+/* Get JSON with entries for the featured stocks, ordered by our algorithm's rating  */
+router.get('/featured', function(req, res, next)
+{
+    res.send(model.getFeatured());
     return next;
 });
 
-router.get('/tryPy', function (req, res, next) {
+/* Get data about a stock with symbol "symbol" in the range "fromDate" to "toDate" */
+//TODO: maybe more parameters?
+router.get('/getDataSingle', function(req, res, next){
+    var results = finance.GetEntriesFor(req.query.symbol,req.query.from,req.query.to);
+    results.then(function(result){res.send(result);});
+    return next;
 
+});
 
-    var client = new zerorpc.Client();
-    client.connect("tcp://127.0.0.1:4242");
+/* Get data about multiple stocks from the list "symbols": "symb1,symb2,..." in the range "fromDate" to "toDate" */
+//TODO: maybe more parameters?
+router.get('/getDataMulti', function(req, res, next){
+    var array = req.query.symbols.split(',');
+    var results = finance.GetEntriesForMulti(array,req.query.from,req.query.to);
+    results.then(function(result){res.send(result);});
+    return next;
 
-    client.invoke("hello", "RPC", function(error, res, more) {
-        console.log(res);
-    });
-})
+});
 
-router.get('/products/:id', function (req, res, next) {
-
-})
-/* GET home page. */
+/* If not found, redirect to home page */
 router.get('*', function(req, res, next) {
     res.render('index', { title: 'DEFAULT HOMEPAGE' });
 });
+
 module.exports = router;
