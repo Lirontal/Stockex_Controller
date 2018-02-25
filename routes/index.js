@@ -1,10 +1,10 @@
 var express = require('express');
-
-var Finance = require('../yahoo-finance/finance');
+//
+// var Finance = require('../yahoo-finance/finance');
 var Model = require('../model_interface/model');
-var finance = new Finance();
+// var finance = new Finance();
 var router = express.Router();
-var model = new Model();
+var model = new Model("tcp://localhost:5555");
 /* This executes on every route */
 router.use(function timeLog (req, res, next) {
     makeResponseValid(res);
@@ -44,8 +44,19 @@ router.get('/getDataMulti', function(req, res, next){
 
 });
 
+/* A communication test */
+router.get('/comm', function(req, res, next){
+    model.tryCommunication("he").then(function(result){
+        console.log("Received reply from model");
+        res.send(result.toString());
+
+        return next;
+    });
+
+});
+
 /* If not found, redirect to home page */
-router.get('*', function(req, res, next) {
+router.get('*', function(req, res) {
     res.render('index', { title: 'DEFAULT HOMEPAGE' });
 });
 

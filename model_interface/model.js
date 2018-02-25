@@ -1,11 +1,15 @@
 var Entry = require('../entry/entry').Entry;
-var zerorpc = require("zerorpc");
-var client = new zerorpc.Client();
-client.connect("tcp://localhost:4242");
+var zmq = require("zeromq");
 
-function Model() {}
+var requester = zmq.socket('req');
+// var client = new zerorpc.Client();
+// client.connect("tcp://localhost:4242");
 
-//TODO: add more parameters
+function Model(serverAddress) {
+    requester.connect(serverAddress);
+}
+
+// //TODO: add more parameters
 Model.prototype.getFeatured = function()
 {
     var response;
@@ -48,10 +52,15 @@ Model.prototype.advSearch = function()
     // });
 };
 
-Model.prototype.tryCommunication = function()
+Model.prototype.tryCommunication = function(str)
 {
-    client.invoke("hello", "RPC", function(error, res, more) {
-        console.log("Success! : "+res);
+
+    requester.send(str);
+    return new Promise(function (fulfill){
+        requester.on("message", function (reply) {
+            console.log("Received reply from model");
+            fulfill(reply.toString());
+        });
     });
 };
 
