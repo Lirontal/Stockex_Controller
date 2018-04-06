@@ -5,8 +5,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var app = express();
+
 app.set('view engine', 'jade');
-app.listen(8080);
+app.listen("8080","0.0.0.0");
 app.set('json spaces', 2);
 // // uncomment after placing your favicon in /public
 // //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

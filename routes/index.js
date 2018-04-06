@@ -46,9 +46,11 @@ router.get('/getDataMulti', function(req, res, next){
 
 /* A communication test */
 router.get('/comm', function(req, res, next){
-    model.tryCommunication("he").then(function(result){
-        console.log("Received reply from model");
-        res.send(result.toString());
+    model.tryCommunication('{"0": {"action":"getHistorical", "symbol":"GOOGL", "start":"2017-01-02", "end":"2017-01-06"}}').then(function(result){
+        console.log("Received reply from model: ");
+        var resStr = result;
+        console.log(resStr);
+        res.send(resStr);
 
         return next;
     });

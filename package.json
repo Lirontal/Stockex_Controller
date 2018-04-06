@@ -19,6 +19,7 @@
     "morgan": "~1.9.0",
     "node-gyp": "^3.6.2",
     "promise": "^8.0.1",
+    "quandl": "0.0.6",
     "serve-favicon": "~2.4.5",
     "yahoo-finance": "^0.3.5",
     "zeromq": "^4.6.0",
