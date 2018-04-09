@@ -41,7 +41,14 @@ router.get('/getDataMulti', function(req, res, next){
     var results = finance.GetEntriesForMulti(array,req.query.from,req.query.to);
     results.then(function(result){res.send(result);});
     return next;
+});
 
+router.get('/easySearch', function(req, res, next){
+    var budget = req.query.budget;
+
+    var results = model.easySearch(budget);
+    results.then(function(result){res.send(result);});
+    return next;
 });
 
 /* A communication test */

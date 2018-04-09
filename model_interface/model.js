@@ -35,32 +35,35 @@ function featuredPlaceHolder()
     return entryArray;
 }
 
-//TODO: add more parameters
-Model.prototype.easySearch = function()
+send = function(str)
 {
-    //TODO: add more parameters
-    // client.invoke("easySearch", "", function(error, res, more) {
-    //     response = res;
-    // });
-};
-
-//TODO: add more parameters
-Model.prototype.advSearch = function()
-{
-    // client.invoke("advSearch", "", function(error, res, more) {
-    //     response = res;
-    // });
-};
-
-Model.prototype.tryCommunication = function(str)
-{
-    console.log("sending: "+str+" ...");
+    console.log("sending: "+str.substr(0,50)+"...");
     requester.send(str);
     return new Promise(function (fulfill){
         requester.on("message", function (reply) {
             fulfill(reply.toString());
         });
     });
+};
+
+//TODO: add more parameters
+Model.prototype.easySearch = function(budget)
+{
+    var request = '{"0": {"action":"easySearch", "budget":"'+ budget +'"}}';
+    return send(request);
+};
+
+//TODO: remove easySearch placeholder
+Model.prototype.advSearch = function(budget, companyType, companyName)
+{
+    var request = '{"0": {"action":"advancedSearch", "budget":"'+ budget +'", "companyType":"'+ companyType +'", "companyName":"'+ companyName +'"}}';
+    return send(request);
+};
+
+Model.prototype.tryCommunication = function(str)
+{
+
+    return send(str);
 };
 
 module.exports = Model;
