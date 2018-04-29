@@ -8,6 +8,7 @@ var model = new Model("tcp://localhost:5555");
 /* This executes on every route */
 router.use(function timeLog (req, res, next) {
     makeResponseValid(res);
+    sanitizeRequest(req);
     next();
 });
 
@@ -18,17 +19,22 @@ function makeResponseValid(res)
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 }
 
+function sanitizeRequest(req)
+{
+    
+}
+
 /* Get JSON with entries for the featured stocks, ordered by our algorithm's rating  */
 router.get('/featured', function(req, res, next)
 {
-    res.send(model.getFeatured());
+    res.send('nothing here fck off');
     return next;
 });
 
 /* Get data about a stock with symbol "symbol" in the range "fromDate" to "toDate" */
 //TODO: maybe more parameters?
 router.get('/getDataSingle', function(req, res, next){
-    var results = finance.GetEntriesFor(req.query.symbol,req.query.from,req.query.to);
+    var results = finance.GetEntriadvfesFor(req.query.symbol,req.query.from,req.query.to);
     results.then(function(result){res.send(result);});
     return next;
 
@@ -45,15 +51,34 @@ router.get('/getDataMulti', function(req, res, next){
 
 router.get('/easySearch', function(req, res, next){
     var budget = req.query.budget;
+    if(!isNaN(budget)) {
+        var results = model.easySearch(budget);
+        results.then(function (result) {
 
-    var results = model.easySearch(budget);
-    results.then(function(result){res.send(result);});
+            res.send((result));
+        });
+    }
+    else res.send('please send numbers only');
+    return next;
+});
+
+router.get('/advancedSearch', function(req, res, next){
+    var budget = req.query.budget;
+    var company_type = req.query.company_type;
+    var company_name = req.query.company_name;
+    if(!isNaN(budget)) {
+        var results = model.advSearch(budget,company_type,company_name);
+        results.then(function (result) {
+            res.send((result));
+        });
+    }
+    else res.send('please send numbers only');
     return next;
 });
 
 /* A communication test */
 router.get('/comm', function(req, res, next){
-    model.tryCommunication('{"0": {"action":"getHistorical", "symbol":"GOOGL", "start":"2017-01-02", "end":"2017-01-06"}}').then(function(result){
+    model.tryCommunication('{"0": {"action":"getHistorical", "symbol":"GOOGL", "start":"2018-04-12", "end":"2018-04-12"}}').then(function(result){
         console.log("Received reply from model: ");
         var resStr = result;
         console.log(resStr);
