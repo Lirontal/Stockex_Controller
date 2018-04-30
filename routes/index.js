@@ -54,8 +54,8 @@ router.get('/easySearch', function(req, res, next){
     if(!isNaN(budget)) {
         var results = model.easySearch(budget);
         results.then(function (result) {
-
-            res.send((result));
+            console.log(result.substr(22401,100))
+            res.send(JSON.parse(result));
         });
     }
     else res.send('please send numbers only');
