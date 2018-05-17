@@ -8,28 +8,20 @@ var model = new Model("tcp://localhost:5555");
 /* This executes on every route */
 router.use(function timeLog (req, res, next) {
     makeResponseValid(res);
-    sanitizeRequest(req);
+    //sanitizeRequest(req);
     next();
 });
-
+/* Get JSON with entries for the featured stocks, ordered by our algorithm's rating  */
+router.get('/featured', function(req, res, next)
+{
+    return next;
+});
 /* Alter response's header so that angular accepts our response */
 function makeResponseValid(res)
 {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 }
-
-function sanitizeRequest(req)
-{
-    
-}
-
-/* Get JSON with entries for the featured stocks, ordered by our algorithm's rating  */
-router.get('/featured', function(req, res, next)
-{
-    res.send('nothing here fck off');
-    return next;
-});
 
 /* Get data about a stock with symbol "symbol" in the range "fromDate" to "toDate" */
 //TODO: maybe more parameters?
@@ -54,7 +46,6 @@ router.get('/easySearch', function(req, res, next){
     if(!isNaN(budget)) {
         var results = model.easySearch(budget);
         results.then(function (result) {
-            console.log(result.substr(22401,100))
             res.send(JSON.parse(result));
         });
     }

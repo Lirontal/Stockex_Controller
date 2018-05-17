@@ -37,7 +37,7 @@ function featuredPlaceHolder()
 
 send = function(str)
 {
-    console.log("sending: "+str.substr(0,50)+"...");
+    console.log("sending: "+str+"...");
     requester.send(str);
     return new Promise(function (fulfill){
         requester.on("message", function (reply) {
