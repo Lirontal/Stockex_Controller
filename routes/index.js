@@ -14,6 +14,8 @@ router.use(function timeLog (req, res, next) {
 /* Get JSON with entries for the featured stocks, ordered by our algorithm's rating  */
 router.get('/featured', function(req, res, next)
 {
+    var results = model.getFeatured();
+    results.then(function(result){res.send(result);});
     return next;
 });
 /* Alter response's header so that angular accepts our response */
@@ -30,6 +32,14 @@ router.get('/getDataSingle', function(req, res, next){
     results.then(function(result){res.send(result);});
     return next;
 
+});
+
+router.get('/getPredHistory', function(req, res, next){
+    var results = model.getPredHistory(req.query.symbol,req.query.start,req.query.end);
+    results.then(function (result) {
+        res.send(JSON.parse(result));
+    });
+    return next;
 });
 
 /* Get data about multiple stocks from the list "symbols": "symb1,symb2,..." in the range "fromDate" to "toDate" */

@@ -12,12 +12,7 @@ function Model(serverAddress) {
 // //TODO: add more parameters
 Model.prototype.getFeatured = function()
 {
-    var response;
-    // client.invoke("getFeatured", "", function(error, res, more) {
-    //     response = res;
-    // });
-    response = featuredPlaceHolder();
-    return response;
+    return this.easySearch(99999999999999999);
 };
 
 function featuredPlaceHolder()
@@ -57,6 +52,12 @@ Model.prototype.easySearch = function(budget)
 Model.prototype.advSearch = function(budget, companyType, companyName)
 {
     var request = '{"0": {"action":"advancedSearch", "budget":"'+ budget +'", "companyType":"'+ companyType +'", "companyName":"'+ companyName +'"}}';
+    return send(request);
+};
+
+Model.prototype.getPredHistory = function(symbol, start, end)
+{
+    var request = '{"0": {"action":"getPredHistory", "symbol":"'+ symbol +'", "start":"'+ start +'", "end":"'+ end +'"}}';
     return send(request);
 };
 
